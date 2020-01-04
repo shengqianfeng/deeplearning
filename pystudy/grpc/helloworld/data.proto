@@ -1,0 +1,13 @@
+﻿/**
+* python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. ./data.proto #在 helloworld 目录中执行编译，会生成：data_pb2.py 与 data_pb2_grpc.py
+*/
+syntax = "proto3";
+
+package pystudy.grpc.helloworld;
+
+service FormatData {
+  rpc DoFormat(Data) returns (Data){}
+}
+message Data {
+  string text = 1;
+}
