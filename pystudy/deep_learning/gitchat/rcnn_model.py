@@ -175,7 +175,7 @@ class rcnn(object):
         logger.info("Final Model saved in file: %s" % saver_path)
         return train_loss,test_loss,train_accuracy,test_accuracy
 
-    def predict(self,embedding_output,input):
+    def predict(self,input):
         if tf.__version__[0] >= '1':
             cell = tf.contrib.rnn.BasicRNNCell(num_units=self.rnn_size)
         else:
@@ -190,7 +190,7 @@ class rcnn(object):
         3 output是一个三维的tensor，是time_steps步的所有的输出，形状为 (batch_size, time_steps, cell.output_size)
            state是最后一步的隐状态，形状为 (batch_size, cell.state_size)
         """
-        output, state = tf.nn.dynamic_rnn(cell, embedding_output,input, dtype=tf.float32)
+        output, state = tf.nn.dynamic_rnn(cell,input, dtype=tf.float32)
 
         # 再为 RNN 添加 dropout
         '''
