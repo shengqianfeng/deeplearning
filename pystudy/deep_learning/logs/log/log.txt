@@ -3,3 +3,11 @@
 2020-01-07 17:07:58,741:INFO:intent_train: remove saved data...
 2020-01-07 17:08:27,278:INFO:intent_train: Final Model saved in file: ./model/classifier_save/normal/
 2020-01-07 17:10:03,739:INFO:intent_train: Final Model saved in file: ./model/classifier_save/normal/model.ckpt
+2020-01-08 14:14:14,229:INFO:intent_train: Final Model saved in file: ./model/classifier_save/normal/model.ckpt
+2020-01-08 14:14:14,229:INFO:intent_train: Final Model saved in file: ./model/classifier_save/normal/model.ckpt
+2020-01-08 14:22:41,742:INFO:intent_train: Final Model saved in file: ./model/classifier_save/normal/model.ckpt
+2020-01-08 14:22:41,742:INFO:intent_train: Final Model saved in file: ./model/classifier_save/normal/model.ckpt
+2020-01-08 15:43:41,800:INFO:intent_train: Final Model saved in file: ./model/classifier_save/normal/model.ckpt
+2020-01-08 15:43:41,800:INFO:intent_train: Final Model saved in file: ./model/classifier_save/normal/model.ckpt
+2020-01-08 19:14:29,580:INFO:intent_train: Final Model saved in file: ./model/classifier_save/normal/model.ckpt
+2020-01-08 19:14:29,580:INFO:intent_train: Final Model saved in file: ./model/classifier_save/normal/model.ckpt

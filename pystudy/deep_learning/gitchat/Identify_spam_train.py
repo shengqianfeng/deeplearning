@@ -10,15 +10,14 @@
 # 加载需要的包
 import os
 import re
-import io
-import requests
-import numpy as np
+
 import matplotlib.pyplot as plt
+import numpy as np
 import tensorflow as tf
-from zipfile import ZipFile
 from tensorflow.python.framework import ops
+
 from pystudy.config.log_config import log_base_config
-from  pystudy.deep_learning.gitchat.rcnn_model import rcnn
+from pystudy.deep_learning.gitchat.rcnn_model import rcnn
 
 logger = log_base_config.get_log("intent_train")
 # 将 default graph 重新初始化，保证内存中没有其他的 Graph，相当于清空所有的张量
@@ -34,7 +33,7 @@ if not os.path.exists(output_path):
 model_output_path = os.path.join(output_path, "model.ckpt")
 
 
-net = rcnn(sess,model_output_path)
+net = rcnn(model_output_path)
 # 导入数据
 text_data_target,text_data_train = net.load_data()
 
@@ -72,7 +71,14 @@ vocab_processor = tf.contrib.learn.preprocessing.VocabularyProcessor(net.max_seq
 text_processed = np.array(list(vocab_processor.fit_transform(text_data_train)))
 # 词向量的大小
 vocab_size = len(vocab_processor.vocabulary_)
+
+import pickle
+with open('./vocab/word2id.pkl', 'wb') as f:
+    pickle.dump(vocab_processor.vocabulary_, f)
+
 print("Vocabulary Size: {:d}".format(vocab_size))
+
+net.n_words = vocab_size
 
 # shuffle，可以打乱数据行序，使数据随机化
 text_processed = np.array(text_processed)
@@ -101,11 +107,7 @@ y_train, y_test = y_shuffled[:ix_cutoff], y_shuffled[ix_cutoff:]
 print("80-20 Train Test split: {:d} -- {:d}".format(len(y_train), len(y_test)))
 
 # 将输入数据做词嵌入 Embedding
-# 首先，建立 x 和 y 的 placeholders
-# x_data 的大小为 [None, maxsequencelength]，maxsequencelength就是每个文本句子的组成单词数量
-x_data = tf.placeholder(tf.int32, [None, net.max_sequence_length])
-# y_output 是一个整数，值为 0 或 1, 分别表示 ham 和 spam
-y_output = tf.placeholder(tf.int32, [None])
+
 
 # 接下来，建立 embedding
 # 用 embedding 将索引转化为特征，这是一种特征学习方法，可以用来自动学习数据集中各个单词的显著特征,
@@ -118,9 +120,7 @@ y_output = tf.placeholder(tf.int32, [None])
 2 然后用 tf.nn.embedding_lookup 函数来找嵌入矩阵 embedding_mat 中与 x_data 的每个元素所对应的行，
 也就是将每个单词的整数索引，映射到这个可训练的嵌入矩阵 embedding_mat 的某一行
 """
-# 初始化词嵌入矩阵
-embedding_mat = tf.Variable(tf.random_uniform([vocab_size, net.embedding_size], -1.0, 1.0))
-embedding_output = tf.nn.embedding_lookup(embedding_mat, x_data)
+
 
 # 建立RNN模型
 # 定义 RNN cell
@@ -135,12 +135,10 @@ RNNCell解释：
 比如：输入一个初始状态 h0 和输入 x1，调用 call(x1, h0) 后就可以得到 (output1, h1)， 再调用一次 call(x2, h1) 就可以得到 (output2, h2)
 """
 print("-------------------建立RNN模型-----------------------------")
-net.build_model(y_output,embedding_output)
+net.build_model()
 
 print("--------------训练模型-------------")
-test_dict = {x_data: x_test, y_output: y_test, net.dropout_keep_prob: 1.0}
-train_loss,test_loss,train_accuracy,test_accuracy =\
-                        net.train_model(test_dict,x_train,y_train,x_data,y_output)
+train_loss,test_loss,train_accuracy,test_accuracy = net.train_model(x_train,y_train,x_test,y_test)
 
 print("------------可视化损失函数 loss 和准确率 accuracy-----------")
 # 损失随着时间的变化
