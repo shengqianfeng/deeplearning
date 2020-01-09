@@ -9,6 +9,8 @@
 """
 import pickle
 import os
+import re
+
 
 def read_dictionary(vocab_path):
     """
@@ -46,7 +48,7 @@ def sentence2id(sent, word2idx):
     :return:
     """
     sentence_id = []
-    for word in sent:
+    for word in sent.split():
         if word.isdigit():
             word = "<NUM>"
         elif word.encode('UTF-8').isalpha():
@@ -57,4 +59,23 @@ def sentence2id(sent, word2idx):
             word = "<UNK>"
         sentence_id.append(word2idx[word])
     return sentence_id
+# import tensorflow as tf
 
+def clean_text(text_string):
+    text_string = re.sub(r'([^\s\w]|_|[0-9])+', '', text_string)
+    text_string = " ".join(text_string.split())
+    text_string = text_string.lower()
+    return text_string
+
+
+#
+#
+#
+# import numpy as np
+# # 调用 clean_text 清理文本
+# s='Go until jurong point, crazy.. Available only in bugis n great world la e buffet... Cine there got amore wat...'
+# text = clean_text(s)
+#
+# word2idx = read_dictionary('../deep_learning/gitchat/vocab/word2id.pkl')
+# x = sentence2id(text,word2idx._mapping)
+# print(x)

@@ -25,7 +25,7 @@ class rcnn(object):
 
     def __init__(self,model_output_path):
         # 设定 RNN 模型的参数
-        self.epochs = 30
+        self.epochs = 60
         self.batch_size = tf.placeholder(dtype=tf.int32)
         # 每个文本的最大长度为 25 个单词，这样会将较长的文本剪切为 25 个，不足的用零填充
         self.max_sequence_length = 25
@@ -33,7 +33,7 @@ class rcnn(object):
         # 每个单词都将被嵌入到一个长度为 50 的可训练向量中
         self.embedding_size = 50
         self.min_word_frequency = 10
-        self.learning_rate = 0.0005
+        self.learning_rate = 0.001
         self.dropout_keep_prob = tf.placeholder(tf.float32)
         self.model_output_path = model_output_path
         #  inp大小为 [None, maxsequencelength]，maxsequencelength就是每个文本句子的组成单词数量
@@ -160,7 +160,7 @@ class rcnn(object):
             2 选择训练集, 训练每个 batch
             3 计算训练集和测试集的损失 loss 和准确率 accuracy
             '''
-            user_batch_size =50
+            user_batch_size =150
             # 开始训练
             for epoch in range(self.epochs):
 

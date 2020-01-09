@@ -29,8 +29,9 @@ class recognize(object):
             saver = tf.train.import_meta_graph('./model/classifier_save/normal/model.ckpt.meta')
             saver.restore(sess, self.net.model_output_path)
             sum = 0
+            from pystudy.sysutils.data_utils import clean_text
             for i in range(len(x_train)):
-                predict_class, pred_prob = self.predict(x_train[i], self.word2id._mapping)
+                predict_class, pred_prob = self.predict(clean_text(x_train[i]), self.word2id._mapping)
                 if predict_class == y_train[i]:
                     sum = sum + 1
             print('正确率：', sum / len(x_train))
@@ -43,7 +44,6 @@ class recognize(object):
             self.net.inp: X,
             self.net.labels: Y,
             self.net.dropout_keep_prob: 1.0,
-            self.net.batch_size: 1,
         }
         _y, predictions = self.net.sess.run([self.net.soft_max_y, self.net.predict_result], feed_dict=f_dict)
         predict_class = predictions[0]

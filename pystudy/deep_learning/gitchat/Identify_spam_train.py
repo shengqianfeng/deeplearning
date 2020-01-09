@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
 from tensorflow.python.framework import ops
-
+from  pystudy.sysutils.data_utils import clean_text
 from pystudy.config.log_config import log_base_config
 from pystudy.deep_learning.gitchat.rcnn_model import rcnn
 
@@ -37,13 +37,6 @@ net = rcnn(model_output_path)
 # 导入数据
 text_data_target,text_data_train = net.load_data()
 
-# 为了减少 vocabulary, 先清理文本，移除特殊字符，删掉多余的空格，将文本都换成小写
-# 创建一个文本清理函数
-def clean_text(text_string):
-    text_string = re.sub(r'([^\s\w]|_|[0-9])+', '', text_string)
-    text_string = " ".join(text_string.split())
-    text_string = text_string.lower()
-    return text_string
 
 
 # 调用 clean_text 清理文本
@@ -90,20 +83,21 @@ shuffle与permutation的区别
     2区别在于shuffle直接在原来的数组上进行操作，改变原来数组的顺序，无返回值。
     3而permutation不直接在原来的数组上进行操作，而是返回一个新的打乱顺序的数组，并不改变原来的数组
 '''
-shuffled_ix = np.random.permutation(np.arange(len(text_data_target)))
+# shuffled_ix = np.random.permutation(np.arange(len(text_data_target)))
 # 按照随机打乱词向量及标签的顺序重新返回数据集和训练集
-x_shuffled = text_processed[shuffled_ix]
-y_shuffled = text_data_target[shuffled_ix]
-
+# x_shuffled = text_processed[shuffled_ix]
+# y_shuffled = text_data_target[shuffled_ix]
+x_shuffled = text_processed
+y_shuffled = text_data_target
 '''
 shuffle 数据后，将数据集分为 80% 训练集和 20% 测试集 
 如果想做交叉验证 cross-validation ，可以将 测试集 进一步分为测试集和验证集来调参
 '''
 ix_cutoff = int(len(y_shuffled)*0.80)
 # 分割数据：训练集和测试集
-x_train, x_test = x_shuffled[:ix_cutoff], x_shuffled[ix_cutoff:]
+x_train, x_test = x_shuffled[:], x_shuffled[:]
 # 分割标签：训练集标签和测试集标签
-y_train, y_test = y_shuffled[:ix_cutoff], y_shuffled[ix_cutoff:]
+y_train, y_test = y_shuffled[:], y_shuffled[:]
 print("80-20 Train Test split: {:d} -- {:d}".format(len(y_train), len(y_test)))
 
 # 将输入数据做词嵌入 Embedding
