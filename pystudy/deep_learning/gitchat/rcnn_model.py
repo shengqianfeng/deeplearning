@@ -29,7 +29,7 @@ class rcnn(object):
         self.batch_size = tf.placeholder(dtype=tf.int32)
         # 每个文本的最大长度为 25 个单词，这样会将较长的文本剪切为 25 个，不足的用零填充
         self.max_sequence_length = 25
-        # 表示rnn隐藏层神经元的个数
+        # 表示rnn隐藏层神经元的个数，注意并不是rnn网络展开的时间步数，是rnn每个cell单元的神经元个数，rnn的cell单元可以当成全连接层来理解
         self.rnn_size = 10
         # 每个单词都将被嵌入到一个长度为 50 的可训练向量中
         self.embedding_size = 50
@@ -103,7 +103,8 @@ class rcnn(object):
         '''
         tf.transpose 用于将张量进行转置，张量的原有维度顺序是 [0, 1, 2], 则 [1, 0, 2] 是告诉 tf 要将 0 和 1 维转置
          0 代表三维数组的高，1 代表二维数组的行，2 代表二维数组的列。 
-         即将输出 output 的维度 [batch_size, time_steps, cell.output_size] 变成 [time_steps, batch_size, cell.output_size]
+         即将输出 output 的维度 [batch_size, time_steps, cell.output_size] 
+         变成 [time_steps, batch_size, cell.output_size]，表示每个时间步的batch_size份的cell单元的输出：这里为(25，？，10)，这里的10就是rcnn_size
         '''
         output = tf.transpose(output, [1, 0, 2])
         # 切掉最后一个时间步的输出作为预测值 tf.gather 用于将向量中某些索引值提取出来，得到新的向量。
@@ -124,7 +125,7 @@ class rcnn(object):
             weight = tf.Variable(tf.truncated_normal([self.rnn_size, 2], stddev=0.1))
         with tf.name_scope('biases'):
             bias = tf.Variable(tf.constant(0.1, shape=[2]))
-        # logits 是这个全连接层的输出，作为 softmax 的输入，在接下来定义损失函数时用到
+        # logits 是这个全连接层的输出，作为 softmax 的输入，在接下来定义损失函数时用到，logits_out形状（？，2）
             self.logits_out = tf.matmul(last, weight) + bias
             self.soft_max_y = tf.nn.softmax(self.logits_out)
             # 返回每行最大值的下标
