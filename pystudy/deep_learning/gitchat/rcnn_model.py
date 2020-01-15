@@ -29,17 +29,21 @@ class rcnn(object):
         self.batch_size = tf.placeholder(dtype=tf.int32)
         # 每个文本的最大长度为 25 个单词，这样会将较长的文本剪切为 25 个，不足的用零填充
         self.max_sequence_length = 25
+        # 表示rnn隐藏层神经元的个数
         self.rnn_size = 10
         # 每个单词都将被嵌入到一个长度为 50 的可训练向量中
         self.embedding_size = 50
+        # 单词被收录到此表中的最小词频
         self.min_word_frequency = 10
         self.learning_rate = 0.001
         self.dropout_keep_prob = tf.placeholder(tf.float32)
+        # 模型保存路径
         self.model_output_path = model_output_path
-        #  inp大小为 [None, maxsequencelength]，maxsequencelength就是每个文本句子的组成单词数量
-        self.inp = tf.placeholder(tf.int32, [None, self.max_sequence_length],name='inp')
+        #  inp大小为 [None, max_sequence_length]，max_sequence_length就是每个文本句子的组成单词数量
+        self.inp = tf.placeholder(tf.int32, [None, self.max_sequence_length], name='inp')
         # 是一个整数，值为 0 或 1, 分别表示 ham 和 spam
         self.labels = tf.placeholder(tf.int32, [None], name='labels')
+        # 词向量的大小
         self.n_words = None
 
         self.train_step = None
@@ -59,7 +63,24 @@ class rcnn(object):
                 cell = tf.nn.rnn_cell.BasicRNNCell(num_units=self.rnn_size)
 
             # 初始化词嵌入矩阵
+            # W可以理解为：每个词向量中的词都有对应大小为embedding_size=50的向量，这里值为随机值区间(-1,1)
             self.W  = tf.Variable(tf.random_uniform([self.n_words, self.embedding_size], -1.0, 1.0), name='W')
+            # embedding_output理解为： 将inp中每个单词的整数索引，映射到这个可训练的嵌入矩阵embedding_mat的某一行
+            """
+            比如：句子：i love python 
+                  索引向量（inp）：[100,  555  ,987]
+                  embedding_output结果为：[[.......],[.......],[..........]],其中的每个[.......]就是句子单词对应向量索引查找到的词嵌入矩阵行，因为词嵌入矩阵是每个单词的embedding_size扩展表示
+            再比如：
+            w = tf.constant([[1,2],[3,4],[5,6]])
+            inp=tf.constant([[1,1],[0,1]])
+            b = tf.nn.embedding_lookup(w, inp)
+            sess.run(b)的结果是：[[[3 4]
+                                  [3 4]]
+                                
+                                 [[1 2]
+                                  [3 4]]]
+            """
+            # 输出格式： (？，max_sequence_length，embedding_size)
             self.embedding_output = tf.nn.embedding_lookup(self.W, self.inp)
 
             # 用 tf.nn.dynamic_rnn 建立 RNN 序列
