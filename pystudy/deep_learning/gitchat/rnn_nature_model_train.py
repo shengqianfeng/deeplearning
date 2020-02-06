@@ -303,7 +303,7 @@ class CharRNN(object):
                     feed_dict=feed)
 
             # 随机采样了一个 index
-            ch_id = get_top_char(proba, len(chars))
+            ch_id = self.get_top_char(proba, len(chars))
 
             # 将这个 index 转化为字符，加入到要生成的序列中
             observed_seq.append(int2char[ch_id])
@@ -321,7 +321,7 @@ class CharRNN(object):
                     ['probabilities:0', self.final_state],
                     feed_dict=feed)
 
-                ch_id = get_top_char(proba, len(chars))
+                ch_id = self.get_top_char(proba, len(chars))
 
                 observed_seq.append(int2char[ch_id])
 
