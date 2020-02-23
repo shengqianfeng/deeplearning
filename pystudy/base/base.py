@@ -149,3 +149,40 @@ print([i for i in range(2)])
 
 
 print("---------------------")
+import datetime
+import time
+
+ltime = time.localtime(1581053368)
+timeStr = time.strftime("%Y-%m-%d %H:%M:%S", ltime)
+print(timeStr)
+print("-------------------")
+a=[]
+b= [1,2,3]
+c= [4,5,6]
+a.extend(b)
+a.extend(c)
+print(a)
+print("---------------")
+date_str = '2020-02-08 12:51:42'
+date = date_str[0:10]
+print(date)
+today = datetime.datetime.now().strftime('%Y-%m-%d')
+print(today)
+print(today==date)
+print("-----------------")
+date_str = '02-08 10:27'
+date = date_str[0:5]
+print(date)
+today = datetime.datetime.now().strftime('%m-%d')
+print(today)
+print(today==date)
+print("-----------")
+ltime = time.localtime(1581229981)
+timeStr = time.strftime("%Y-%m-%d %H:%M:%S", ltime)
+print(timeStr)
+print("---------------------")
+url='/n1/2020/0125/c404214-31562146.html'
+date_list = url[4:13].split('/')
+print(date_list)
+print("-----------")
+print(list(range(10)))

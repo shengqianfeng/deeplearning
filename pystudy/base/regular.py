@@ -117,6 +117,7 @@ print(re_telephone.match('010-8086').groups())
 # 编译后生成Regular Expression对象，由于该对象自己包含了正则表达式，所以调用对应的方法时不用给出正则字符串。
 
 
-
-
-
+print("-----------------")
+list = re.split(r'\s+', '\n\na\n\n\nb\n\n\n   c')
+print(list)  # ['a', 'b', 'c']
+print([x for x in list if x])
