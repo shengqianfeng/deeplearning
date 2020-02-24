@@ -112,7 +112,7 @@ def get_people_data(html,type):
         month = date_list[1][0:2]
         day = date_list[1][2:4]
         date=year+"-"+month+'-'+day
-        if date!=today:
+        if date != '2020-'+today:
             continue
         summary = list_summary[idx].text.strip()
         news = News(date+" 00:00:00",title,summary,url,"人民网",type,pic_url)
@@ -124,7 +124,7 @@ import xlwt
 
 
 #  将数据写入新文件
-def data_write(file_path, datas,logstr):
+def data_write(file_path, datas):
     f = xlwt.Workbook()
     styleBoldRed = xlwt.easyxf('font: color-index red, bold on');
     headerStyle = styleBoldRed
@@ -149,12 +149,12 @@ def data_write(file_path, datas,logstr):
         i = i + 1
 
     f.save(file_path)  # 保存文件
-    print(logstr+"--------数据保存完成！")
+    print("--------数据保存完成！")
 
 if __name__ == '__main__':
     qwfb_news_list = get_news_list()
-    data_write("./人民网"+today+"权威发布.xls",qwfb_news_list,"人民网"+today+"权威发布")
     zjjd_news_list = get_zjjd_list()
-    data_write("./人民网"+today+"专家解读.xls",zjjd_news_list,"人民网"+today+"专家解读")
     kxfh_news_list = get_kxfh_list()
-    data_write("./人民网"+today+"科学防护.xls",kxfh_news_list,"人民网"+today+"科学防护")
+    qwfb_news_list.extend(zjjd_news_list)
+    qwfb_news_list.extend(kxfh_news_list)
+    data_write("./人民网(科普中国)-2020-"+today+".xls",qwfb_news_list)
