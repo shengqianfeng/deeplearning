@@ -67,7 +67,7 @@ def get_people_data(html):
         news_info = [x for x in re.split(r'\n+', dtnew.text) if x]
         date = news_info[0][0:5]
         if today==date:
-            news = News('2020-'+news_info[0], news_info[1], news_info[2], content_url,'人民日报','','')
+            news = News('2020-'+news_info[0]+":00", news_info[1], news_info[2], content_url,'人民日报','','')
             news_list.append(news)
     return news_list
 
