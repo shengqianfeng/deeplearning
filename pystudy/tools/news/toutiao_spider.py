@@ -53,19 +53,24 @@ def get_news_list(url):
     news_list =  get_toutiao_data(data)
     return news_list
 
-
+import datetime
+today = datetime.datetime.now().strftime('%Y-%m-%d')
 def get_toutiao_data(data):
     resp_json = json.loads(data.text)
     news_list = []
     for dtnew in resp_json['data']:
         if 'merge_article' in dtnew.keys() and  'article_url' not in dtnew.keys():
             for merge_article in dtnew['merge_article']:
+                if merge_article['datetime'][0:10] != today:
+                    continue
                 news = News(merge_article['datetime'], merge_article['title'], merge_article['abstract'], merge_article['article_url'], '今日头条', '疫情谣言',
                             merge_article['image_url'])
                 news_list.append(news)
         else:
             if 'datetime' not in dtnew.keys():
                 print(dtnew)
+                continue
+            if dtnew['datetime'][0:10]!=today:
                 continue
             summary = ''
             if 'summary' not in dtnew.keys():
@@ -107,8 +112,7 @@ def data_write(file_path, datas):
 
     f.save(file_path)  # 保存文件
     print("--------保存完成！")
-import datetime
-today = datetime.datetime.now().strftime('%Y-%m-%d')
+
 if __name__ == '__main__':
 
     url_indexs=list(range(0,200,20))
