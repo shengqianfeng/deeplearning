@@ -206,4 +206,35 @@ print("----------------------")
 # ltime = time.localtime('2020-03-16T01:22:12.464Z')
 # timeStr = time.strftime("%Y-%m-%d %H:%M:%S", ltime)
 # print(timeStr)
-print(0%100==0)
+# print(0%100==0)
+print('2020-03-16T02:27:57-04:00'[0:10])
+print("-----------")
+
+from datetime import datetime, timedelta
+now_time = datetime.now()
+utc_time = now_time - timedelta(hours=8)  # UTC只是比北京时间提前了8个小时
+utc_time = utc_time.strftime("%Y-%m-%dT%H:%M:%SZ")  # 转换成Aliyun要求的传参格式...
+print(utc_time)
+print("=======================")
+from tzlocal import get_localzone
+# 2020-03-19T04:06:22.473Z
+time_a = '2020-03-17T07:38:01.474Z'
+utc_time = datetime.strptime(time_a,'%Y-%m-%dT%H:%M:%S.%fZ')
+local_time = utc_time+timedelta(hours=8)
+utc_string = local_time.strftime('%Y-%m-%d %H:%M:%S')
+print(utc_string)
+
+time_b = '2020-03-17T04:32:55Z'
+utc_time = datetime.strptime(time_b,'%Y-%m-%dT%H:%M:%SZ')
+local_time = utc_time-timedelta(hours=4)
+utc_string = local_time.strftime('%Y-%m-%d %H:%M:%S')
+print(utc_string)
+print("===========================")
+time_b = '2020-03-17T04:32:55-04:00'
+print(time_b[0:19])
+print(time_b[20:])
+utc_time = datetime.strptime(time_b[0:19]+"Z",'%Y-%m-%dT%H:%M:%SZ')
+local_time = utc_time-timedelta(hours=int(time_b[20:][0:2]))
+utc_string = local_time.strftime('%Y-%m-%d %H:%M:%S')
+print(utc_string)
+
