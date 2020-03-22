@@ -117,7 +117,7 @@ def data_write(file_path, datas):
     print("--------保存完成！")
 
 if __name__ == '__main__':
-    url_indexs = list(range(0, 1000))
+    url_indexs = list(range(0, 200))
     all_list = []
     for i in url_indexs:
         if i==200:
