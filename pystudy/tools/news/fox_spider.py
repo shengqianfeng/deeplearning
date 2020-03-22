@@ -62,15 +62,40 @@ def get_time_data(response):
     resp_list = json.loads(resp)
     news_list = []
     for resp_data in resp_list:
-        summary = resp_data['description']
-        if resp_data['description'] is None:
+        if 'description' not in resp_data.keys():
             summary=resp_data['title']
+        else:
+            summary = resp_data['description']
         content_url = resp_data['url']
         if 'http:' not in content_url:
             content_url='https://www.foxnews.com/'+content_url
-        news = News(resp_data['lastPublishedDate'], resp_data['title'], summary, content_url, 'FOX新闻', '', resp_data['imageUrl'])
+        if today != resp_data['lastPublishedDate'][0: 10]:
+            continue
+        news = News(format_date(resp_data['lastPublishedDate']), resp_data['title'], summary, content_url, 'FOX新闻', '', resp_data['imageUrl'])
         news_list.append(news)
     return news_list
+
+from datetime import datetime, timedelta
+"""
+北京时间为东八区。东几区就比UTC时间快几个小时。
+
+"""
+def format_date(old_time):
+    # time_b = '2020-03-17T04:32:55-04:00'
+    # print(old_time[0:19])
+    # print(old_time[20:])
+    if 'Z' not in old_time:
+        utc_time = datetime.strptime(old_time[0:19] + "Z", '%Y-%m-%dT%H:%M:%SZ')
+        local_time = utc_time - timedelta(hours=int(old_time[20:][0:2]))
+        utc_string = local_time.strftime('%Y-%m-%d %H:%M:%S')
+        return utc_string
+    else:
+        utc_time = datetime.strptime(old_time, '%Y-%m-%dT%H:%M:%S.%fZ')
+        local_time = utc_time + timedelta(hours=8)
+        utc_string = local_time.strftime('%Y-%m-%d %H:%M:%S')
+        return utc_string
+
+
 
 
 import xlwt

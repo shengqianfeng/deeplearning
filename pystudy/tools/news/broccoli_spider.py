@@ -67,13 +67,15 @@ def get_time_data(response):
     news_list = []
     resp_list = resp_json['data']['data']
     for resp_data in resp_list:
+        ltime = time.localtime(resp_data['publish_time'] / 1000)
+        timeStr = time.strftime("%Y-%m-%d %H:%M:%S", ltime)
+        if today != timeStr[0:10]:
+            continue
         id = resp_data['id']
         # 已经存在的新闻跳过
         if id_set.__contains__(id):
             continue
         id_set.add(id)
-        ltime = time.localtime(resp_data['publish_time']  / 1000)
-        timeStr = time.strftime("%Y-%m-%d %H:%M:%S", ltime)
         img_url = ''
         if resp_data['pic']:
             img_url=resp_data['pic'][0]

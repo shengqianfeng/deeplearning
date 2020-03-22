@@ -77,7 +77,7 @@ def get_toutiao_data(data):
                 summary =  dtnew['abstract']
             else:
                 summary = dtnew['summary']
-            news = News(dtnew['datetime'], dtnew['title'], summary, dtnew['article_url'],'今日头条','疫情谣言',dtnew['image_url'])
+            news = News(dtnew['datetime'], dtnew['title'], summary, dtnew['article_url'],'今日头条','疫情辟谣',dtnew['image_url'])
             news_list.append(news)
     return news_list
 
