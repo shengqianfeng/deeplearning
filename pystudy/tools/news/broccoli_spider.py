@@ -80,8 +80,8 @@ def get_time_data(response):
         if resp_data['pic']:
             img_url=resp_data['pic'][0]
         summary = ""
-        if resp_data['summary'] is None:
-            summary=resp_data['title']
+        if resp_data['summary'] is None or resp_data['summary'] == '':
+            summary = resp_data['title']
         news = News(timeStr, resp_data['title'], summary, resp_data['url'], '夸克疫情', '', 'https:'+img_url)
         news_list.append(news)
     return news_list

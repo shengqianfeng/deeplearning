@@ -130,7 +130,7 @@ def data_write(file_path, datas):
     print("--------保存完成！")
 
 if __name__ == '__main__':
-    url_indexs=list(range(0,3000,10))
+    url_indexs=list(range(0,1000,10))
     all_list = []
     for i in url_indexs:
         url = 'https://www.foxnews.com/api/article-search?isCategory=false&isTag=true&isKeyword=false&isFixed=false&isFeedUrl=false&searchSelected=fox-news%2Fhealth%2Finfectious-disease%2Fcoronavirus&contentTypes=%7B%22interactive%22:true,%22slideshow%22:true,%22video%22:true,%22article%22:true%7D&size=11&offset='+str(i)
