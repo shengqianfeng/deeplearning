@@ -58,6 +58,8 @@ today = datetime.datetime.now().strftime('%Y-%m-%d')
 def get_toutiao_data(data):
     resp_json = json.loads(data.text)
     news_list = []
+    if resp_json['data']==None:
+        return news_list
     for dtnew in resp_json['data']:
         if 'merge_article' in dtnew.keys() and  'article_url' not in dtnew.keys():
             for merge_article in dtnew['merge_article']:
