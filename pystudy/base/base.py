@@ -216,7 +216,7 @@ utc_time = now_time - timedelta(hours=8)  # UTC只是比北京时间提前了8�
 utc_time = utc_time.strftime("%Y-%m-%dT%H:%M:%SZ")  # 转换成Aliyun要求的传参格式...
 print(utc_time)
 print("=======================")
-# from tzlocal import get_localzone
+from tzlocal import get_localzone
 # 2020-03-19T04:06:22.473Z
 time_a = '2020-03-17T07:38:01.474Z'
 utc_time = datetime.strptime(time_a,'%Y-%m-%dT%H:%M:%S.%fZ')
@@ -237,8 +237,4 @@ utc_time = datetime.strptime(time_b[0:19]+"Z",'%Y-%m-%dT%H:%M:%SZ')
 local_time = utc_time-timedelta(hours=int(time_b[20:][0:2]))
 utc_string = local_time.strftime('%Y-%m-%d %H:%M:%S')
 print(utc_string)
-print("-----------------------")
-a=""
-print(a is None)
-print(a =='')
 

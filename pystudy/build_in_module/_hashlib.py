@@ -13,11 +13,11 @@
 
 # 以常见的摘要算法MD5为例，计算出一个字符串的MD5值
 # 如果数据量很大，可以分块多次调用update()，最后计算的结果是一样的
-import hashlib
+# import hashlib
 #
-md5 = hashlib.md5()
-md5.update('how to use md5 in python hashlib?'.encode('utf-8'))
-print(md5.hexdigest())
+# md5 = hashlib.md5()
+# md5.update('how to use md5 in python hashlib?'.encode('utf-8'))
+# print(md5.hexdigest())
 
 
 """
